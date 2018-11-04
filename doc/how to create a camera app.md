@@ -41,6 +41,38 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 }
 ```
 
+### 保存full-size照片
+在manifest文件中添加手机内存写文件权限：
+```javascript
+<manifest ...>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    ...
+</manifest>
+```
+共享照片的保存目录由getExternalStoragePublicDirectory()来提供，参数为DIRECTORY_PICTURES。<br/>
+如果想将图片私有的保存在手机中，可以使用getExternalFilesDir()。在Android4.3及更低的版本中，使用该方法需要WRITE_EXTERNAL_STORAGE权限，当时在Android4.4及以上的版本中，不需要该权限，应为该目录其它app中无法访问的。
+使用例子如下：
+```javascript
+String mCurrentPhotoPath;
+
+private File createImageFile() throws IOException {
+    // Create an image file name
+    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+    String imageFileName = "JPEG_" + timeStamp + "_";
+    File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+    File image = File.createTempFile(
+        imageFileName,  /* prefix */
+        ".jpg",         /* suffix */
+        storageDir      /* directory */
+    );
+
+    // Save a file: path for use with ACTION_VIEW intents
+    mCurrentPhotoPath = image.getAbsolutePath();
+    return image;
+}
+```
+
+
 
 
 

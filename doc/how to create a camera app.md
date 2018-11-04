@@ -71,8 +71,93 @@ private File createImageFile() throws IOException {
     return image;
 }
 ```
+有了创建保存图片的文件的方法，可以使用创建和调用intent的例子如下：
+```javascript
+static final int REQUEST_TAKE_PHOTO = 1;
 
+private void dispatchTakePictureIntent() {
+    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    // Ensure that there's a camera activity to handle the intent
+    if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+        // Create the File where the photo should go
+        File photoFile = null;
+        try {
+            photoFile = createImageFile();
+        } catch (IOException ex) {
+            // Error occurred while creating the File
+            ...
+        }
+        // Continue only if the File was successfully created
+        if (photoFile != null) {
+            Uri photoURI = FileProvider.getUriForFile(this,
+                                                  "com.example.android.fileprovider",
+                                                  photoFile);
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+            startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+        }
+    }
+}
+```
+现在还需要配置FileProvider:
+```javascript
+<application>
+   ...
+   <provider
+        android:name="android.support.v4.content.FileProvider"
+        android:authorities="com.example.android.fileprovider"
+        android:exported="false"
+        android:grantUriPermissions="true">
+        <meta-data
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/file_paths"></meta-data>
+    </provider>
+    ...
+</application>
+```
+一定要确保权限配置一定要getUriForFile(Context, String, File)方法的第二个参数。在meta-data部分，您可以看到，提供者希望在专用资源文件中配置合适的路径，res/xml/file_paths.xml.实例如下：
+```javascript
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <external-path name="my_images" path="Android/data/com.example.package.name/files/Pictures" />
+</paths>
+```
+### 添加照片到图库
+当通过Intent生成图片后，并且已经知道了图片的具体位置，对于其他人来说，让您的照片易于访问的最简单方法可能是让它可以从系统的媒体提供者访问。<br/>
+下面的示例方法演示了如何调用系统的媒体扫描程序将照片添加到媒体提供者的数据库中，使其在Android Gallery应用程序和其他应用程序中可用。
+```javascript
+private void galleryAddPic() {
+    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+    File f = new File(mCurrentPhotoPath);
+    Uri contentUri = Uri.fromFile(f);
+    mediaScanIntent.setData(contentUri);
+    this.sendBroadcast(mediaScanIntent);
+}
+```
+### 解码缩放图片
+在内存有限的情况下，管理多个full-size的图片可能很棘手。如果您发现您的应用程序在显示一些图像之后耗尽了内存，那么您可以通过将JPEG扩展到一个已经按比例缩放以匹配目标视图大小的内存数组来大大减少动态堆的使用量。
+```javascript
+private void setPic() {
+    // Get the dimensions of the View
+    int targetW = mImageView.getWidth();
+    int targetH = mImageView.getHeight();
 
+    // Get the dimensions of the bitmap
+    BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+    bmOptions.inJustDecodeBounds = true;
+    BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+    int photoW = bmOptions.outWidth;
+    int photoH = bmOptions.outHeight;
 
+    // Determine how much to scale down the image
+    int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
 
+    // Decode the image file into a Bitmap sized to fill the View
+    bmOptions.inJustDecodeBounds = false;
+    bmOptions.inSampleSize = scaleFactor;
+    bmOptions.inPurgeable = true;
+
+    Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+    mImageView.setImageBitmap(bitmap);
+}
+```
 

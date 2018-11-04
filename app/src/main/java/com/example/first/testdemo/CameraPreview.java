@@ -54,6 +54,11 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
             Log.d("+++", "Error starting camera preview: " + e.getMessage());
         }
     }
+
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+
+    }
 }
 
 

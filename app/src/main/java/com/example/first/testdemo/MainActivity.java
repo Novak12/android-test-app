@@ -78,21 +78,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onClick(View v) {
         try{
             switch (v.getId()) {
                 case R.id.take_photo:
-                    File outputImage = new File(Environment.getExternalStorageDirectory(),
-                            "tempImage" + ".jpg");
-                    try {
-                        if (outputImage.exists()) {
-                            outputImage.delete();
-                        }
-                        outputImage.createNewFile();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                    String imageFileName = "JPEG_" + timeStamp + "_";
+                    File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                    File outputImage = File.createTempFile(
+                            imageFileName,  /* prefix */
+                            ".jpg",         /* suffix */
+                            storageDir      /* directory */
+                    );
+                    //保存图片到图库
+                    this.galleryAddPic(outputImage.getAbsolutePath());
+
                     imageUri = Uri.fromFile(outputImage);
                     Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
@@ -102,5 +104,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    //保存图片到图库
+    private void galleryAddPic(String mCurrentPhotoPath) {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(mCurrentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
     }
 }

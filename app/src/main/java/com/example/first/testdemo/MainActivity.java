@@ -74,6 +74,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case CROP_PHOTO:
                 if (resultCode == RESULT_OK) {
                     try {
+                        if(imageUri != null) {
+                            Uri uri = data.getData();
+                            imageUri = uri;
+                        }
                         Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver()
                                 .openInputStream(imageUri));
                         picture.setImageBitmap(bitmap);
@@ -81,6 +85,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         e.printStackTrace();
                     }
                 }
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
                 break;
         }
     }
@@ -93,7 +100,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         try{
             switch (v.getId()) {
                 case R.id.take_photo:
-                    this.openCamera(this);
+                    //this.openCamera(this);
+                    openGallery();
                     break;
             }
         }catch (Exception e){
@@ -164,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
         // 开启一个带有返回值的Activity，请求码为PHOTO_REQUEST_CAREMA
-        activity.startActivityForResult(intent, PHOTO_REQUEST_CAREMA);
+        activity.startActivityForResult(intent, TAKE_PHOTO);
     }
     /*
      * 判断sdcard是否被挂载
@@ -172,5 +180,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static boolean hasSdcard() {
         return Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED);
+    }
+
+    public void openGallery(){
+        Intent intent =new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent,CROP_PHOTO);
     }
 }

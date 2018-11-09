@@ -3,6 +3,7 @@ package com.example.first.testdemo;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentValues;
@@ -33,6 +34,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import java.io.File;
@@ -193,36 +195,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivityForResult(intent,CROP_PHOTO);
     }
 
-    public void onClickNotification(Context context){
-        NotificationManager notificationManager = (NotificationManager) getSystemService
-                (NOTIFICATION_SERVICE);
-        //为了版本兼容  选择V7包下的NotificationCompat进行构造
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-        //Ticker是状态栏显示的提示
-        builder.setTicker("简单Notification");
-        //第一行内容  通常作为通知栏标题
-        builder.setContentTitle("标题");
-        //第二行内容 通常是通知正文
-        builder.setContentText("通知内容");
-        //第三行内容 通常是内容摘要什么的 在低版本机器上不一定显示
-        builder.setSubText("这里显示的是通知第三行内容！");
-        //ContentInfo 在通知的右侧 时间的下面 用来展示一些其他信息
-        //builder.setContentInfo("3");
-        //number设计用来显示同种通知的数量和ContentInfo的位置一样，如果设置了ContentInfo则number会被隐藏
-        builder.setNumber(2);
-        //可以点击通知栏的删除按钮删除
-        builder.setAutoCancel(true);
-        //系统状态栏显示的小图标
-        builder.setSmallIcon(R.drawable.notify_5);
-        //下拉显示的大图标
-        builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.launcher_sohu));
-        Intent intent = new Intent(context, PendingActivity.class);
-        PendingIntent pIntent = PendingIntent.getActivity(context, 1, intent, 0);
-        //点击跳转的intent
-        builder.setContentIntent(pIntent);
-        //通知默认的声音 震动 呼吸灯
-        builder.setDefaults(NotificationCompat.DEFAULT_ALL);
-        Notification notification = builder.build();
-        notificationManager.notify(TYPE_Normal, notification);
+    public void onClickNotification(View v){
+        try{
+            String id = "my_channel_01";
+            String name="我是渠道名字";
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            Notification notification = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationChannel mChannel = new NotificationChannel(id, name, NotificationManager.IMPORTANCE_LOW);
+                Toast.makeText(this, mChannel.toString(), Toast.LENGTH_SHORT).show();
+                Log.i("123", mChannel.toString());
+                notificationManager.createNotificationChannel(mChannel);
+                notification = new Notification.Builder(this,id)
+                        .setChannelId(id)
+                        .setContentTitle("5 new messages")
+                        .setContentText("hahaha")
+                        .setSmallIcon(R.mipmap.ic_launcher).build();
+            } else {
+                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this,id)
+                        .setContentTitle("5 new messages")
+                        .setContentText("hahaha")
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setOngoing(true)
+                        .setChannelId(id);//无效
+                notification = notificationBuilder.build();
+            }
+            notificationManager.notify(111123, notification);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 }

@@ -37,7 +37,12 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".PendingActivity"></activity>
+        <activity android:name=".PendingActivity" />
+        <activity
+            android:name=".ResultActivity"
+            android:parentActivityName=".MainActivity"
+            android:label="@string/title_activity_result"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

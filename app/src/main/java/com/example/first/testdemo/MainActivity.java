@@ -24,6 +24,8 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -197,6 +199,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void onClickNotification(View v){
         try{
+            Intent intent = new Intent(this, PendingActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
             String id = "my_channel_01";
             String name="我是渠道名字";
             NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -210,6 +216,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .setChannelId(id)
                         .setContentTitle("5 new messages")
                         .setContentText("hahaha")
+                        .setContentIntent(pendingIntent)
                         .setSmallIcon(R.mipmap.ic_launcher).build();
             } else {
                 NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this,id)
@@ -224,6 +231,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public void onClickRegularActivity(View v) {
+        // Create an Intent for the activity you want to start
+        Intent resultIntent = new Intent(this, ResultActivity.class);
+        // Create the TaskStackBuilder and add the intent, which inflates the back stack
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addNextIntentWithParentStack(resultIntent);
+        // Get the PendingIntent containing the entire back stack
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        String id = "my_channel_01";
+        String name="我是渠道名字";
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, id);
+        builder.setContentIntent(resultPendingIntent)
+                .setContentTitle("5 new messages")
+                .setContentText("hahaha")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setOngoing(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(111124, builder.build());
 
     }
 }

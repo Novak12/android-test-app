@@ -21,6 +21,15 @@
         android:text="@string/btn_notification"
         android:onClick="onClickNotification"/>
 
+    <Button
+        android:id="@+id/regularNotification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:textAllCaps="false"
+        android:text="@string/btn_notification"
+        android:onClick="onClickRegularActivity"/>
+
     <ImageView
         android:id="@+id/picture"
         android:layout_width="wrap_content"

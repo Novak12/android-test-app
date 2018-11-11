@@ -21,3 +21,27 @@ NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANN
                 .bigText("Much longer text that cannot fit one line..."))
         .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 ```
+使用setStyle()方法来使用大文本的类型，可以使你放入更多的文字。<br/>
+
+### create a notification channel
+```javascript
+private void createNotificationChannel() {
+    // Create the NotificationChannel, but only on API 26+ because
+    // the NotificationChannel class is new and not in the support library
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        CharSequence name = getString(R.string.channel_name);
+        String description = getString(R.string.channel_description);
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+        channel.setDescription(description);
+        // Register the channel with the system; you can't change the importance
+        // or other notification behaviors after this
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
+    }
+}
+```
+在android8.0及更高的版本中，要发布任何通知都是必须要创建一个NotificationChannel.
+
+
+

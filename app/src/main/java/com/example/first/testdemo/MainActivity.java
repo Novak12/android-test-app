@@ -256,4 +256,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         notificationManager.notify(111124, builder.build());
 
     }
+
+    public  void onClickBroadcast(View v){
+
+        /*创建通知栏的点击事件*/
+        Intent notificationIntent = new Intent(getApplicationContext(), MyBroadcastReceiver.class);
+        notificationIntent.setAction("notification_clicked");
+        notificationIntent.putExtra(MyBroadcastReceiver.TYPE, 1);
+        PendingIntent intent = PendingIntent.getBroadcast(getApplicationContext(), 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
+
+        /*滑动删除通知栏后，广播监听*/
+        Intent deleIntent = new Intent(getApplicationContext(), MyBroadcastReceiver.class);
+        deleIntent.setAction("notification_cancelled");
+        deleIntent.putExtra(MyBroadcastReceiver.TYPE, 1);
+        PendingIntent deletIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, deleIntent, PendingIntent.FLAG_ONE_SHOT);
+
+        /*创建*/
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), "music");
+        mBuilder.setSmallIcon(R.mipmap.ic_launcher)
+                .setWhen(System.currentTimeMillis())// 通知栏时间，一般是直接用系统的
+                .setPriority(Notification.DEFAULT_ALL)//
+                .setContentIntent(intent)//点击事件
+                .setDeleteIntent(deletIntent);//滑动事件
+//        notification.flags = notification.FLAG_NO_CLEAR;//设置通知点击或滑动时不被清除
+        NotificationManager  notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(111, mBuilder.build());//开启通知
+        
+    }
 }

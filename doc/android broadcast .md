@@ -40,3 +40,15 @@ IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
 ```
 上下文注册的接收者在其注册上下文有效时接收广播。例如，如果您在活动上下文中注册，那么只要活动没有被销毁，您就会收到广播。如果您注册了应用程序上下文，那么只要应用程序在运行，您就会收到广播。
 
+### 发送broadcast
+android提供了3中app发送broadcast的方式：
+* sendOrderedBroadcast(Intent, String)，每次只向一个receiver发送broadcast。当一个receiver执行完后，在将结果传送给另一个receiver，它也可以终止广播是其他receiver无法接收到。而receiver的顺序可以用通过inten-filter的Android：priority属性来控制。
+* sendBroadcast(Intent),将广播发送给所有的receiver，它是无序的。
+* LocalBroadcastManager.sendBroadcast，在app内部发送广播。
+```javascript
+Intent intent = new Intent();
+intent.setAction("com.example.broadcast.MY_NOTIFICATION");
+intent.putExtra("data","Notice me senpai!");
+sendBroadcast(intent);
+```
+

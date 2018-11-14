@@ -52,3 +52,15 @@ intent.putExtra("data","Notice me senpai!");
 sendBroadcast(intent);
 ```
 
+### broadcast发送与权限
+```javascript
+sendBroadcast(new Intent("com.example.NOTIFY"),
+              Manifest.permission.SEND_SMS);
+```
+如果receiver想接收上面发送的消息，必须在manifest中添加如下权限：
+```javascript
+<uses-permission android:name="android.permission.SEND_SMS"/>
+```
+### broadcast接收与权限
+如果receiver在注册时设置了权限，那个发送的广播想让他接收到，则发送方必须拥有相同的权限。
+

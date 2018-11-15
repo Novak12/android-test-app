@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView picture;
     private Uri imageUri;
     public static File tempFile;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,9 +57,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-            StrictMode.setVmPolicy( builder.build() );
+            StrictMode.setVmPolicy(builder.build());
         }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -74,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case CROP_PHOTO:
                 if (resultCode == RESULT_OK) {
                     try {
-                        if(imageUri != null) {
+                        if (imageUri != null) {
                             Uri uri = data.getData();
                             imageUri = uri;
                         }
@@ -93,24 +95,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onClick(View v) {
-        try{
+        try {
             switch (v.getId()) {
                 case R.id.take_photo:
                     //this.openCamera(this);
                     openGallery();
                     break;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void openCameraFormer(){
-        try{
+    public void openCameraFormer() {
+        try {
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
             String imageFileName = "JPEG_" + timeStamp + "_";
             File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
@@ -126,10 +128,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
             intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
             startActivityForResult(intent, TAKE_PHOTO);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     //保存图片到图库(指定文件夹，并非相册)
     private void galleryAddPic(String mCurrentPhotoPath) {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
@@ -164,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         != PackageManager.PERMISSION_GRANTED) {
                     //申请WRITE_EXTERNAL_STORAGE权限
-                    Toast.makeText(this,"请开启存储权限",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "请开启存储权限", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 imageUri = activity.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
@@ -174,6 +177,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // 开启一个带有返回值的Activity，请求码为PHOTO_REQUEST_CAREMA
         activity.startActivityForResult(intent, TAKE_PHOTO);
     }
+
     /*
      * 判断sdcard是否被挂载
      */
@@ -182,10 +186,46 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Environment.MEDIA_MOUNTED);
     }
 
-    public void openGallery(){
-        Intent intent =new Intent(Intent.ACTION_PICK);
+    public void openGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
-        startActivityForResult(intent,CROP_PHOTO);
+        startActivityForResult(intent, CROP_PHOTO);
+    }
+
+    /*
+    * 创建并发送notification
+    */
+    public void notification(PendingIntent pendingIntent, String contentTitle) {
+        String id = "my_channel_01";
+        String name = "我是渠道名字";
+        try {
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            Notification notification = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationChannel mChannel = new NotificationChannel(id, name, NotificationManager.IMPORTANCE_LOW);
+                Toast.makeText(this, mChannel.toString(), Toast.LENGTH_SHORT).show();
+                Log.i("123", mChannel.toString());
+                notificationManager.createNotificationChannel(mChannel);
+                notification = new Notification.Builder(this, id)
+                        .setChannelId(id)
+                        .setContentTitle(contentTitle)
+                        .setContentText("hahaha")
+                        .setContentIntent(pendingIntent)
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setAutoCancel(true).build();
+            } else {
+                notification = new NotificationCompat.Builder(this, id)
+                        .setContentTitle(contentTitle)
+                        .setContentText("hahaha")
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setOngoing(true)
+                        .setChannelId(id).build();
+            }
+            notificationManager.notify(111123, notification);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void onClickNotification(View v){
@@ -194,31 +234,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
-            String id = "my_channel_01";
-            String name="我是渠道名字";
-            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            Notification notification = null;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                NotificationChannel mChannel = new NotificationChannel(id, name, NotificationManager.IMPORTANCE_LOW);
-                Toast.makeText(this, mChannel.toString(), Toast.LENGTH_SHORT).show();
-                Log.i("123", mChannel.toString());
-                notificationManager.createNotificationChannel(mChannel);
-                notification = new Notification.Builder(this,id)
-                        .setChannelId(id)
-                        .setContentTitle("this is a new message!")
-                        .setContentText("hahaha")
-                        .setContentIntent(pendingIntent)
-                        .setSmallIcon(R.mipmap.ic_launcher).build();
-            } else {
-                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this,id)
-                        .setContentTitle("5 new messages")
-                        .setContentText("hahaha")
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setOngoing(true)
-                        .setChannelId(id);//无效
-                notification = notificationBuilder.build();
-            }
-            notificationManager.notify(111123, notification);
+            this.notification(pendingIntent,"notification");
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -235,24 +251,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         PendingIntent resultPendingIntent =
                 stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        String id = "my_channel_01";
-        String name="我是渠道名字";
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        NotificationChannel mChannel = new NotificationChannel(id, name, NotificationManager.IMPORTANCE_LOW);
-        Notification notification = null;
-        Toast.makeText(this, mChannel.toString(), Toast.LENGTH_SHORT).show();
-        Log.i("123", mChannel.toString());
-        notificationManager.createNotificationChannel(mChannel);
-        notification = new Notification.Builder(this,id)
-                .setContentIntent(resultPendingIntent)
-                .setContentTitle("notification to new activity")
-                .setContentText("hahaha")
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setAutoCancel(true)
-                .setOngoing(true).build();
-
-        notificationManager.notify(111124, notification);
-
+        this.notification(resultPendingIntent, "notification to new activity");
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -289,17 +288,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .setAutoCancel(true)
                 .setSmallIcon(R.mipmap.ic_launcher).build();
         notificationManager.notify(111123, notification);
-
-        /*创建*/
-        //NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), "music");
-        //mBuilder.setSmallIcon(R.mipmap.ic_launcher)
-        //        .setWhen(System.currentTimeMillis())// 通知栏时间，一般是直接用系统的
-        //        .setPriority(Notification.DEFAULT_ALL)//
-        //        .setContentIntent(intent)//点击事件
-        //        .setDeleteIntent(deletIntent);//滑动事件
-//        notification.flags = notification.FLAG_NO_CLEAR;//设置通知点击或滑动时不被清除
-        //NotificationManager  notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        //notificationManager.notify(111, mBuilder.build());//开启通知
-        
     }
 }

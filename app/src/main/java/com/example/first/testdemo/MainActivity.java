@@ -21,28 +21,19 @@ import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -214,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 notificationManager.createNotificationChannel(mChannel);
                 notification = new Notification.Builder(this,id)
                         .setChannelId(id)
-                        .setContentTitle("5 new messages")
+                        .setContentTitle("this is a new message!")
                         .setContentText("hahaha")
                         .setContentIntent(pendingIntent)
                         .setSmallIcon(R.mipmap.ic_launcher).build();
@@ -233,6 +224,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void onClickRegularActivity(View v) {
         // Create an Intent for the activity you want to start
         Intent resultIntent = new Intent(this, ResultActivity.class);
@@ -245,18 +237,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         String id = "my_channel_01";
         String name="我是渠道名字";
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, id);
-        builder.setContentIntent(resultPendingIntent)
-                .setContentTitle("5 new messages")
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        NotificationChannel mChannel = new NotificationChannel(id, name, NotificationManager.IMPORTANCE_LOW);
+        Notification notification = null;
+        Toast.makeText(this, mChannel.toString(), Toast.LENGTH_SHORT).show();
+        Log.i("123", mChannel.toString());
+        notificationManager.createNotificationChannel(mChannel);
+        notification = new Notification.Builder(this,id)
+                .setContentIntent(resultPendingIntent)
+                .setContentTitle("notification to new activity")
                 .setContentText("hahaha")
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setOngoing(true);
+                .setAutoCancel(true)
+                .setOngoing(true).build();
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(111124, builder.build());
+        notificationManager.notify(111124, notification);
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public  void onClickBroadcast(View v){
 
         /*创建通知栏的点击事件*/
@@ -271,16 +270,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         deleIntent.putExtra(MyBroadcastReceiver.TYPE, 1);
         PendingIntent deletIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, deleIntent, PendingIntent.FLAG_ONE_SHOT);
 
-        /*创建*/
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), "music");
-        mBuilder.setSmallIcon(R.mipmap.ic_launcher)
+
+        String id = "my_channel_01";
+        String name="我是渠道名字";
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        NotificationChannel mChannel = new NotificationChannel(id, name, NotificationManager.IMPORTANCE_LOW);
+        Notification notification = null;
+        Toast.makeText(this, mChannel.toString(), Toast.LENGTH_SHORT).show();
+        Log.i("123", mChannel.toString());
+        notificationManager.createNotificationChannel(mChannel);
+        notification = new Notification.Builder(this,id)
+                .setChannelId(id)
+                .setContentTitle("broadcast notification")
+                .setContentText("hahaha")
                 .setWhen(System.currentTimeMillis())// 通知栏时间，一般是直接用系统的
-                .setPriority(Notification.DEFAULT_ALL)//
-                .setContentIntent(intent)//点击事件
-                .setDeleteIntent(deletIntent);//滑动事件
+                .setContentIntent(intent) //点击事件
+                .setDeleteIntent(deletIntent) //滑动事件
+                .setAutoCancel(true)
+                .setSmallIcon(R.mipmap.ic_launcher).build();
+        notificationManager.notify(111123, notification);
+
+        /*创建*/
+        //NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), "music");
+        //mBuilder.setSmallIcon(R.mipmap.ic_launcher)
+        //        .setWhen(System.currentTimeMillis())// 通知栏时间，一般是直接用系统的
+        //        .setPriority(Notification.DEFAULT_ALL)//
+        //        .setContentIntent(intent)//点击事件
+        //        .setDeleteIntent(deletIntent);//滑动事件
 //        notification.flags = notification.FLAG_NO_CLEAR;//设置通知点击或滑动时不被清除
-        NotificationManager  notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(111, mBuilder.build());//开启通知
+        //NotificationManager  notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        //notificationManager.notify(111, mBuilder.build());//开启通知
         
     }
 }

@@ -38,6 +38,38 @@
         android:textAllCaps="false"
         android:text="@string/btn_broadcast"
         android:onClick="onClickBroadcast"/>
+    <Button
+        android:id="@+id/startservice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="200dp"
+        android:textAllCaps="false"
+        android:text="@string/btn_startService"
+        android:onClick="onStartService"/>
+    <Button
+        android:id="@+id/stopservice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="250dp"
+        android:textAllCaps="false"
+        android:text="@string/btn_stopService"
+        android:onClick="onStopService"/>
+    <Button
+        android:id="@+id/bindservice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="300dp"
+        android:textAllCaps="false"
+        android:text="@string/btn_bindService"
+        android:onClick="onBindService"/>
+    <Button
+        android:id="@+id/unbindservice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="350dp"
+        android:textAllCaps="false"
+        android:text="@string/btn_unbindService"
+        android:onClick="onUnbindService"/>
 
     <ImageView
         android:id="@+id/picture"

@@ -5,4 +5,8 @@
     <string name="title_activity_result">ResultActivity</string>
     <string name="btn_regular_notification">RegularNotification</string>"
     <string name="btn_broadcast">broadcast</string>"
+    <string name="btn_startService">start service</string>"
+    <string name="btn_stopService">stop service</string>"
+    <string name="btn_bindService">bind service</string>"
+    <string name="btn_unbindService">unbind service</string>"
 </resources>

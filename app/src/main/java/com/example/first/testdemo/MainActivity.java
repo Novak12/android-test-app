@@ -6,9 +6,11 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,6 +20,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.IBinder;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
@@ -32,11 +35,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.first.testdemo.service.EchoService;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,ServiceConnection {
     public static final int PHOTO_REQUEST_CAREMA = 1;// 拍照
     public static final int TAKE_PHOTO = 1;
     public static final int CROP_PHOTO = 2;
@@ -44,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView picture;
     private Uri imageUri;
     public static File tempFile;
+    private Intent echoServiceIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         picture = (ImageView) findViewById(R.id.picture);
 
         takePhoto.setOnClickListener(this);
+
+        echoServiceIntent=new Intent(this,EchoService.class);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
@@ -288,5 +296,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .setAutoCancel(true)
                 .setSmallIcon(R.mipmap.ic_launcher).build();
         notificationManager.notify(111123, notification);
+    }
+
+    public void onStartService(View v){
+        startService(echoServiceIntent);
+    }
+    public void onStopService(View v){
+        stopService(echoServiceIntent);
+    }
+    public void onBindService(View v){
+        bindService(echoServiceIntent,this,Context.BIND_AUTO_CREATE);
+    }
+    public void onUnbindService(View v){
+        unbindService(this);
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+        Log.i("MainActivity","service connected");
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName componentName) {
+        Log.i("MainActivity","service disconnected");
     }
 }

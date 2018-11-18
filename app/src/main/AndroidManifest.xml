@@ -36,22 +36,28 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
         <activity
             android:name=".ResultActivity"
             android:label="@string/title_activity_result"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".PendingActivity" />
 
-        <activity android:name=".PendingActivity"></activity>
         <receiver
             android:name=".MyBroadcastReceiver"
             android:enabled="true"
             android:exported="true">
-                <intent-filter>
-                    <action android:name="notification_cancelled"/>
-                    <action android:name="notification_clicked"/>
-                </intent-filter>
+            <intent-filter>
+                <action android:name="notification_cancelled" />
+                <action android:name="notification_clicked" />
+            </intent-filter>
         </receiver>
+
+        <service
+            android:name=".service.EchoService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

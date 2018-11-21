@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -40,6 +41,15 @@ public class StorageActivy extends AppCompatActivity {
             fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
             fos.write(string.getBytes());
             fos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onReadInfo(View v){
+        String fileName="";
+        try {
+            FileInputStream input=openFileInput(fileName);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

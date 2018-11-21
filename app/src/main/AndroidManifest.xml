@@ -57,7 +57,13 @@
         <service
             android:name=".service.EchoService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity
+            android:name=".StorageActivy"
+            android:label="@string/title_activity_storage_activy"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

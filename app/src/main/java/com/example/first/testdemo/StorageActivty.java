@@ -33,8 +33,7 @@ public class StorageActivty extends AppCompatActivity {
             String storageState = Environment.getExternalStorageState();
             //判断是否存在可用的的SD Card
             if (storageState.equals(Environment.MEDIA_MOUNTED)) {
-                //路径： /storage/emulated/0/Android/data/com.example.first.demo/cache/yoryky.txt
-                File file = new File(getExternalCacheDir().getAbsolutePath(), filename);
+                File file = new File(getFilesDir().getAbsolutePath(), filename);
                 if (file.exists()) file.delete();
 
                 FileOutputStream outputStream = new FileOutputStream(file);
@@ -51,7 +50,7 @@ public class StorageActivty extends AppCompatActivity {
         String fileName = "hello_file.txt";
         StringBuilder sb = new StringBuilder("");
         try {
-            String filePath = getExternalCacheDir().getAbsolutePath();
+            String filePath = getFilesDir().getAbsolutePath();
             File file = new File(filePath, fileName);
             if (file.exists()) {
                 FileInputStream fs = new FileInputStream(file);

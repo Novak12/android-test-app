@@ -14,7 +14,6 @@ import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.hardware.Camera;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Build;
@@ -25,7 +24,6 @@ import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -41,7 +39,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener,ServiceConnection {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, ServiceConnection {
     public static final int PHOTO_REQUEST_CAREMA = 1;// 拍照
     public static final int TAKE_PHOTO = 1;
     public static final int CROP_PHOTO = 2;
@@ -61,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         takePhoto.setOnClickListener(this);
 
-        echoServiceIntent=new Intent(this,EchoService.class);
+        echoServiceIntent = new Intent(this, EchoService.class);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
@@ -201,8 +199,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /*
-    * 创建并发送notification
-    */
+     * 创建并发送notification
+     */
     public void notification(PendingIntent pendingIntent, String contentTitle) {
         String id = "my_channel_01";
         String name = "我是渠道名字";
@@ -236,14 +234,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    public void onClickNotification(View v){
-        try{
+    public void onClickNotification(View v) {
+        try {
             Intent intent = new Intent(this, PendingActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
-            this.notification(pendingIntent,"notification");
-        }catch (Exception e){
+            this.notification(pendingIntent, "notification");
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -263,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public  void onClickBroadcast(View v){
+    public void onClickBroadcast(View v) {
 
         /*创建通知栏的点击事件*/
         Intent notificationIntent = new Intent(getApplicationContext(), MyBroadcastReceiver.class);
@@ -279,14 +277,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         String id = "my_channel_01";
-        String name="我是渠道名字";
+        String name = "我是渠道名字";
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         NotificationChannel mChannel = new NotificationChannel(id, name, NotificationManager.IMPORTANCE_LOW);
         Notification notification = null;
         Toast.makeText(this, mChannel.toString(), Toast.LENGTH_SHORT).show();
         Log.i("123", mChannel.toString());
         notificationManager.createNotificationChannel(mChannel);
-        notification = new Notification.Builder(this,id)
+        notification = new Notification.Builder(this, id)
                 .setChannelId(id)
                 .setContentTitle("broadcast notification")
                 .setContentText("hahaha")
@@ -298,26 +296,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         notificationManager.notify(111123, notification);
     }
 
-    public void onStartService(View v){
+    public void onStartService(View v) {
         startService(echoServiceIntent);
     }
-    public void onStopService(View v){
+
+    public void onStopService(View v) {
         stopService(echoServiceIntent);
     }
-    public void onBindService(View v){
-        bindService(echoServiceIntent,this,Context.BIND_AUTO_CREATE);
+
+    public void onBindService(View v) {
+        bindService(echoServiceIntent, this, Context.BIND_AUTO_CREATE);
     }
-    public void onUnbindService(View v){
+
+    public void onUnbindService(View v) {
         unbindService(this);
     }
 
     @Override
     public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-        Log.i("MainActivity","service connected");
+        Log.i("MainActivity", "service connected");
     }
 
     @Override
     public void onServiceDisconnected(ComponentName componentName) {
-        Log.i("MainActivity","service disconnected");
+        Log.i("MainActivity", "service disconnected");
+    }
+
+    public void onShowDialog(View v) {
+        Intent intent = new Intent(this, DialogActivity.class);
+        startActivity(intent);
+    }
+
+    public void onShowStorageActivity(View v) {
+        Intent intent = new Intent(this, StorageActivty.class);
+        startActivity(intent);
     }
 }

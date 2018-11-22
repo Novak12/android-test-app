@@ -10,4 +10,6 @@
     <string name="btn_bindService">bind service</string>"
     <string name="btn_unbindService">unbind service</string>
     <string name="title_activity_storage_activy">StorageActivy</string>"
+    <string name="show_dialog">ShowDialog</string>"
+    <string name="show_activity_storage_activy">Show Storage Activy</string>
 </resources>

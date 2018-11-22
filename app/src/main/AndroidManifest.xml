@@ -60,10 +60,13 @@
             android:exported="true" />
 
         <activity
-            android:name=".StorageActivy"
+            android:name=".StorageActivty"
             android:label="@string/title_activity_storage_activy"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".DialogActivity"
+            android:theme="@style/dialog_activity"></activity>
     </application>
 
 </manifest>

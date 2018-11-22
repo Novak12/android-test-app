@@ -70,6 +70,22 @@
         android:textAllCaps="false"
         android:text="@string/btn_unbindService"
         android:onClick="onUnbindService"/>
+    <Button
+        android:id="@+id/showDialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="350dp"
+        android:textAllCaps="false"
+        android:text="@string/show_dialog"
+        android:onClick="onShowDialog"/>
+    <Button
+        android:id="@+id/showStorage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="400dp"
+        android:textAllCaps="false"
+        android:text="@string/title_activity_storage_activy"
+        android:onClick="onShowStorageActivity"/>
 
     <ImageView
         android:id="@+id/picture"

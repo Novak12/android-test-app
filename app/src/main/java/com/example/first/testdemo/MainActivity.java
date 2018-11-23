@@ -15,6 +15,9 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.icu.text.SimpleDateFormat;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkRequest;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static File tempFile;
     private Intent echoServiceIntent;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());
         }
+        this.detectNetworkStateChange();
     }
 
     @Override
@@ -330,5 +335,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onShowStorageActivity(View v) {
         Intent intent = new Intent(this, StorageActivty.class);
         startActivity(intent);
+    }
+
+    //监测网络变化
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public void detectNetworkStateChange() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        connectivityManager.requestNetwork(new NetworkRequest.Builder().build(), new ConnectivityManager.NetworkCallback() {
+            @Override
+            public void onAvailable(Network network) {
+                super.onAvailable(network);
+                sendToast("网络可用");
+            }
+
+            @Override
+            public void onLost(Network network) {
+                super.onLost(network);
+                sendToast("网络连接断开");
+            }
+        });
+    }
+
+    public void sendToast(String msg) {
+        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG).show();
     }
 }

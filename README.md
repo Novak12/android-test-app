@@ -13,3 +13,7 @@
 * [how to create a camera app-- take photos](https://github.com/Novak12/android-test-app/blob/master/doc/how%20to%20create%20a%20camera%20app--%20take%20photos.md)
 * [android file api](https://github.com/Novak12/android-test-app/blob/master/doc/android%20file%20api%20.md)
 
+
+#### 备注
+* 在android7.0及以上的版本中，已经废弃了使用ConnectivityManager.CONNECTIVITY_ACTION来发送广播，如果要监听网络变化，一种方法是使用ConnectivityManager.NetworkCallback()，另一只种是使用  JobScheduler 。
+

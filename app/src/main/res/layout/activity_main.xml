@@ -87,13 +87,20 @@
         android:text="@string/title_activity_storage_activy"
         android:onClick="onShowStorageActivity"/>
 
+    <Button
+        android:id="@+id/showProgressbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="450dp"
+        android:textAllCaps="false"
+        android:text="Show Progressbar"
+        android:onClick="onShowProgressbar"/>
+
     <ImageView
         android:id="@+id/picture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
         android:layout_gravity="center_horizontal"/>
-
-
 
 </android.support.design.widget.CoordinatorLayout>

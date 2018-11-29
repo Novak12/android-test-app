@@ -60,7 +60,6 @@
             android:name=".service.EchoService"
             android:enabled="true"
             android:exported="true" />
-
         <activity
             android:name=".StorageActivty"
             android:label="@string/title_activity_storage_activy"
@@ -76,6 +75,8 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+
+        <activity android:name=".MultiLanguage.LanguageSettingActivity"></activity>
     </application>
 
 </manifest>

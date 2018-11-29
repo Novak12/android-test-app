@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">测试样例</string>
+    <string name="action_settings">设置</string>
+    <string name="btn_notification">通知</string>
+    <string name="title_activity_result">显示结果页面</string>
+    <string name="btn_regular_notification">常规通知</string>"
+    <string name="btn_broadcast">广播</string>"
+    <string name="btn_startService">start service</string>"
+    <string name="btn_stopService">stop service</string>"
+    <string name="btn_bindService">bind service</string>"
+    <string name="btn_unbindService">unbind service</string>
+    <string name="title_activity_storage_activy">StorageActivy</string>"
+    <string name="show_dialog">ShowDialog</string>"
+    <string name="show_activity_storage_activy">Show Storage Activy</string>
+</resources>

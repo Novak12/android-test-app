@@ -37,6 +37,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.first.testdemo.MultiLanguage.LanguageSettingActivity;
 import com.example.first.testdemo.service.EchoService;
 
 import java.io.File;
@@ -369,5 +370,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         progress.show();
         // To dismiss the dialog
         //progress.dismiss();
+    }
+
+    public void onSwitchLanguage(View v){
+        startActivity(new Intent(this, LanguageSettingActivity.class));
     }
 }

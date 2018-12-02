@@ -45,4 +45,10 @@
             android:layout_height="50dp" />
     </LinearLayout>
 
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:text="dialog"
+        android:onClick="onShowDialog"/>
+
 </LinearLayout>

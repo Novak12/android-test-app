@@ -80,4 +80,9 @@ public class FragmentsActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    public void onShowDialog(View v){
+        ListViewDialog listDialog=new ListViewDialog(this);
+        listDialog.show();
+    }
 }

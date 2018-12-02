@@ -27,6 +27,7 @@ import android.os.IBinder;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
@@ -37,6 +38,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.first.testdemo.Fragments.FragmentsActivity;
 import com.example.first.testdemo.MultiLanguage.LanguageSettingActivity;
 import com.example.first.testdemo.service.EchoService;
 
@@ -374,5 +376,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void onSwitchLanguage(View v){
         startActivity(new Intent(this, LanguageSettingActivity.class));
+    }
+    public void onShowFragmentActivity(View v){
+        startActivity(new Intent(this, FragmentsActivity.class));
     }
 }

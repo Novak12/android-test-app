@@ -21,6 +21,12 @@ Intent intent = new Intent(Intent.ACTION_SEND);
 intent.putExtra(Intent.EXTRA_EMAIL, recipientArray);
 startActivity(intent);
 ```
+获取传递来的数据：
+```javascript
+Intent intent = getIntent();
+String ip = intent.getStringExtra("ip");
+Person person = (person)intent.getSerializableExtra("person")
+```
 * 如果想在新的activity关闭时，回传一些数据，也可以按照如下操作：
 ```javascript
 public boolean onKeyDown(int keyCode, KeyEvent event) {

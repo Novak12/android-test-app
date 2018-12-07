@@ -36,6 +36,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.example.first.testdemo.Fragments.FragmentsActivity;
@@ -271,6 +272,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void onClickBroadcast(View v) {
+        Intent intent1 = new Intent(this, PendingActivity.class);
+        intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent1, 0);
 
         /*创建通知栏的点击事件*/
         Intent notificationIntent = new Intent(getApplicationContext(), MyBroadcastReceiver.class);
@@ -284,6 +288,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         deleIntent.putExtra(MyBroadcastReceiver.TYPE, 1);
         PendingIntent deletIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, deleIntent, PendingIntent.FLAG_ONE_SHOT);
 
+        RemoteViews mRemoteViews= new RemoteViews(getPackageName(), R.layout.notification_custom);
+        // notification's icon
+        mRemoteViews.setImageViewResource(R.id.notif_icon, R.drawable.ic_launcher_background);
+        // notification's title
+        mRemoteViews.setTextViewText(R.id.notif_title, getResources().getString(R.string.app_name));
+        // notification's content
+        mRemoteViews.setTextViewText(R.id.notif_content, "notification content");
+        mRemoteViews.setOnClickPendingIntent(R.id.notification_confirm_byn,intent);
+        mRemoteViews.setTextViewText(R.id.notification_confirm_byn,"confirm");
+
 
         String id = "my_channel_01";
         String name = "我是渠道名字";
@@ -295,11 +309,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         notificationManager.createNotificationChannel(mChannel);
         notification = new Notification.Builder(this, id)
                 .setChannelId(id)
-                .setContentTitle("broadcast notification")
-                .setContentText("hahaha")
                 .setWhen(System.currentTimeMillis())// 通知栏时间，一般是直接用系统的
-                .setContentIntent(intent) //点击事件
-                .setDeleteIntent(deletIntent) //滑动事件
+                .setCustomContentView(mRemoteViews)
+                //.addAction(R.mipmap.ic_launcher,"confirm",intent) //点击事件
+                //.addAction(R.mipmap.ic_launcher,"delete",deletIntent) //滑动事件
                 .setAutoCancel(true)
                 .setSmallIcon(R.mipmap.ic_launcher).build();
         notificationManager.notify(111123, notification);

@@ -1,5 +1,5 @@
 ### what is android notification?
-Notification又称为通知，是一种全局效果的通知，它展示在收集屏幕的顶端，当用户下滑时展示通知的具体内容。
+Notification又称为通知，是一种全局效果的通知，它展示在手机屏幕的顶端，当用户下滑时展示通知的具体内容。
 
 ### how to create a basic notification?
 ```javascript
